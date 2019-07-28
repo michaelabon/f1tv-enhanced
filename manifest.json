@@ -11,8 +11,15 @@
         "https://f1tv.formula1.com/*"
       ],
       "js": [
-        "src/media-player.js"
+        "src/media-player.js",
+        "src/sync-current-time.js"
       ]
     }
-  ]
+  ],
+
+  "background": {
+    "scripts": [
+      "src/background_script/background.js"
+    ]
+  }
 }
