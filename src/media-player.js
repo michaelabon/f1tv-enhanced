@@ -10,6 +10,27 @@ const jumpToTenth = (tenth) => {
   return video().currentTime = (tenth / 10 * video().duration);
 }
 
+const isFullScreen = function() {
+  return !!(document.fullScreen || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement || document.fullscreenElement);
+}
+
+const toggleFullscreen = function() {
+  if (isFullScreen()) {
+     if (document.exitFullscreen) document.exitFullscreen();
+     else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+     else if (document.webkitCancelFullScreen) document.webkitCancelFullScreen();
+     else if (document.msExitFullscreen) document.msExitFullscreen();
+     setFullscreenData(false);
+  }
+  else {
+     if (video().requestFullscreen) video().requestFullscreen();
+     else if (video().mozRequestFullScreen) video().mozRequestFullScreen();
+     else if (video().webkitRequestFullScreen) video().webkitRequestFullScreen();
+     else if (video().msRequestFullscreen) videoContainer.msRequestFullscreen();
+     setFullscreenData(true);
+  }
+}
+
 const togglePause = () => {
   let v = video();
   if (v.paused) {
@@ -73,6 +94,9 @@ const keyupHandler = (event) => {
       break;
     case "m":
       toggleMute();
+      break;
+    case "f":
+      toggleFullscreen();
       break;
     default:
       return;
