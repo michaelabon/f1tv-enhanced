@@ -1,48 +1,59 @@
-console.log("sync-current-time loaded")
-
-
-var createRandomName = () => {
-  console.log("A creating a random name");
-  let array = new Uint32Array(10);
-  window.crypto.getRandomValues(array);
-  console.log("Z created a random name", array[0]);
-  return array[0].toString();
+const log = (...args) => {
+  // return console.log(...args)
 }
 
-// debugger;
-var myPort = browser.runtime.connect({name: createRandomName()});
+log("sync-current-time loaded")
 
-console.log("sync-current-time opened a port", myPort)
+const createRandomName = () => {
+  log("A creating a random name")
+  let array = new Uint32Array(10)
+  window.crypto.getRandomValues(array)
+  log("Z created a random name", array[0])
+  return array[0].toString()
+}
 
-window.lastSyncedAt = Date.now();
+const portToBackground = browser.runtime.connect({name: createRandomName()})
 
-setTimeout( () => {
-  console.log("A adding a seeked listener");
+log("sync-current-time opened a port", portToBackground)
 
-  video().addEventListener("seeked", e => {
-    console.log("video did seek to", video().currentTime);
+const updateDebounce = () => { window.lastSyncedAt = Date.now() }
 
-    if (window.lastSyncedAt + 300 > Date.now()) {
-      console.log("I'm following the leader; I won't broadcast this");
-    } else {
-      console.log("I'm the leader! Broadcasting a seeked event to ", video().currentTime);
-      myPort.postMessage({ event: "seeked", currentTime: video().currentTime });
-    }
-  });
+updateDebounce()
+const isWithinDebounce = () => window.lastSyncedAt + 300 > Date.now()
+const isWithoutDebounce = () => !isWithinDebounce()
 
-  console.log("Z added a seeked listener");
-}, 9000);
+const setVideoTime = (seconds) => { video().currentTime = seconds }
 
-console.log("A adding a myPort message listener");
-myPort.onMessage.addListener(m => {
-  console.log("message received!", m);
+log("A adding a portToBackground message listener")
+portToBackground.onMessage.addListener(m => {
+  log("message received!", m)
 
-  if (m.updateCurrentTime && window.lastSyncedAt + 300 < Date.now()) {
-    window.lastSyncedAt = Date.now();
+  if (m.updateCurrentTime && isWithoutDebounce()) {
+    updateDebounce()
 
-    video().currentTime = m.updateCurrentTime;
+    setVideoTime(m.updateCurrentTime)
   }
 })
-console.log("Z added a myPort message listener");
+log("Z added a portToBackground message listener")
 
-console.log("sync-current-time finished loading");
+
+const MAX_LOAD_TIME_MS = 9000
+
+setTimeout(() => {
+  log("A adding a seeked listener")
+
+  video().addEventListener("seeked", e => {
+    log("video did seek to", video().currentTime)
+
+    if (isWithinDebounce()) {
+      log("I'm following the leader I won't broadcast this")
+    } else {
+      log("I'm the leader! Broadcasting a seeked event to ", video().currentTime)
+      portToBackground.postMessage({ event: "seeked", currentTime: video().currentTime })
+    }
+  })
+
+  log("Z added a seeked listener")
+}, MAX_LOAD_TIME_MS)
+
+log("sync-current-time finished loading")
