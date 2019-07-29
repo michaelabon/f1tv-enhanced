@@ -1,0 +1,11 @@
+.git/*
+.gitattributes
+.gitignore
+node_modules/*
+icons/*
+test/*
+exclude.lst
+karma.conf.js
+screenshots/*
+build/*
+Makefile
