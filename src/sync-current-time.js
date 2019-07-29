@@ -29,6 +29,10 @@ portToBackground.onMessage.addListener(m => {
   log("message received!", m)
 
   if (m.updateCurrentTime && isWithoutDebounce()) {
+    if (isBeginningOfSession(m.updateCurrentTime)) {
+      return
+    }
+
     updateDebounce()
 
     setVideoTime(m.updateCurrentTime)
@@ -36,6 +40,7 @@ portToBackground.onMessage.addListener(m => {
 })
 log("Z added a portToBackground message listener")
 
+const isBeginningOfSession = t => t < 3
 
 const MAX_LOAD_TIME_MS = 9000
 
