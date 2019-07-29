@@ -1,77 +1,77 @@
 const rewind = (seconds) => {
-  return fastForward(-seconds);
+  return fastForward(-seconds)
 }
 
 const fastForward = (seconds) => {
-  return video().currentTime += seconds;
+  return video().currentTime += seconds
 }
 
 const jumpToTenth = (tenth) => {
-  return video().currentTime = (tenth / 10 * video().duration);
+  return video().currentTime = (tenth / 10 * video().duration)
 }
 
 const isFullScreen = function() {
-  return !!(document.fullScreen || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement || document.fullscreenElement);
+  return !!(document.fullScreen || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement || document.fullscreenElement)
 }
 
 const toggleFullscreen = function() {
   if (isFullScreen()) {
-     if (document.exitFullscreen) document.exitFullscreen();
-     else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-     else if (document.webkitCancelFullScreen) document.webkitCancelFullScreen();
-     else if (document.msExitFullscreen) document.msExitFullscreen();
-     setFullscreenData(false);
+     if (document.exitFullscreen) document.exitFullscreen()
+     else if (document.mozCancelFullScreen) document.mozCancelFullScreen()
+     else if (document.webkitCancelFullScreen) document.webkitCancelFullScreen()
+     else if (document.msExitFullscreen) document.msExitFullscreen()
+     setFullscreenData(false)
   }
   else {
-     if (video().requestFullscreen) video().requestFullscreen();
-     else if (video().mozRequestFullScreen) video().mozRequestFullScreen();
-     else if (video().webkitRequestFullScreen) video().webkitRequestFullScreen();
-     else if (video().msRequestFullscreen) videoContainer.msRequestFullscreen();
-     setFullscreenData(true);
+     if (video().requestFullscreen) video().requestFullscreen()
+     else if (video().mozRequestFullScreen) video().mozRequestFullScreen()
+     else if (video().webkitRequestFullScreen) video().webkitRequestFullScreen()
+     else if (video().msRequestFullscreen) videoContainer.msRequestFullscreen()
+     setFullscreenData(true)
   }
 }
 
 const togglePause = () => {
-  let v = video();
+  let v = video()
   if (v.paused) {
-    v.play();
+    v.play()
   } else {
-    v.pause();
+    v.pause()
   }
 }
 
 const toggleMute = () => {
-  let v = video();
-  let isMuted = v.muted;
-  v.muted = !isMuted;
+  let v = video()
+  let isMuted = v.muted
+  v.muted = !isMuted
 }
 
 const video = () => {
-  return document.querySelector("video");
+  return document.querySelector("video")
 }
 
 const keyupHandler = (event) => {
-  console.log("keyUp", event);
+  console.log("keyUp", event)
 
   if (event.defaultPrevented) {
-    return;
+    return
   }
 
   switch (event.key) {
     case "Left":
     case "ArrowLeft":
-      rewind(5);
-      break;
+      rewind(5)
+      break
     case "j":
-      rewind(10);
-      break;
+      rewind(10)
+      break
     case "Right":
     case "ArrowRight":
-      fastForward(5);
-      break;
+      fastForward(5)
+      break
     case "k":
-      fastForward(10);
-      break;
+      fastForward(10)
+      break
     case "1":
     case "2":
     case "3":
@@ -82,25 +82,25 @@ const keyupHandler = (event) => {
     case "8":
     case "9":
     case "0":
-      jumpToTenth(event.key);
-      break;
+      jumpToTenth(event.key)
+      break
     case "Home":
-      jumpToTenth("0");
-      break;
+      jumpToTenth("0")
+      break
     case " ":
     case "Space":
     case "Spacebar":
-      togglePause();
-      break;
+      togglePause()
+      break
     case "m":
-      toggleMute();
-      break;
+      toggleMute()
+      break
     case "f":
-      toggleFullscreen();
-      break;
+      toggleFullscreen()
+      break
     default:
-      return;
+      return
   }
 }
 
-document.addEventListener("keyup", keyupHandler);
+document.addEventListener("keyup", keyupHandler)

@@ -1,10 +1,9 @@
-console.log("background script loaded!");
-
+console.log("background script loaded!")
 
 var ports = []
 
 function handleSeeked(message, originPort) {
-  console.log("Handling seeked!", message, originPort());
+  console.log("Handling seeked!", message, originPort())
 
   ports.forEach(p => {
     if (p.name !== originPort().name) {
@@ -17,15 +16,15 @@ function handleSeeked(message, originPort) {
 }
 
 function connected(p) {
-  console.log("New connection!", p);
+  console.log("New connection!", p)
 
-  ports[p.sender.tab.id]    = p
+  ports[p.sender.tab.id] = p
 
   p.onMessage.addListener(m => {
-    console.log("message received!", m);
+    console.log("message received!", m)
 
     if (m.event === "seeked") {
-      handleSeeked(m, () => p);
+      handleSeeked(m, () => p)
     }
   })
 }
