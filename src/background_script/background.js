@@ -7,7 +7,7 @@ function handleSeeked(message, originPort) {
 
   ports.forEach(p => {
     if (p.name !== originPort().name) {
-      console.log("posting to port", p);
+      console.log("posting to port", p)
       p.postMessage({ updateCurrentTime: message.currentTime })
     } else {
       console.log("Ignoring the origin port!")
