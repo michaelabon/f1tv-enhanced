@@ -37,6 +37,18 @@ portToBackground.onMessage.addListener(m => {
 
     setVideoTime(m.updateCurrentTime)
   }
+
+  if (m.updatePause && isWithoutDebounce()) {
+    updateDebounce()
+
+    video().pause()
+  }
+
+  if (m.updatePlay && isWithoutDebounce()) {
+    updateDebounce()
+
+    video().play()
+  }
 })
 log("Z added a portToBackground message listener")
 
@@ -48,7 +60,7 @@ setTimeout(() => {
   log("A adding a seeked listener")
 
   video().addEventListener("seeked", e => {
-    log("video did seek to", video().currentTime)
+    log("video received `seeked' event", video().currentTime)
 
     if (isWithinDebounce()) {
       log("I'm following the leader I won't broadcast this")
@@ -56,6 +68,18 @@ setTimeout(() => {
       log("I'm the leader! Broadcasting a seeked event to ", video().currentTime)
       portToBackground.postMessage({ event: "seeked", currentTime: video().currentTime })
     }
+  })
+
+  video().addEventListener("pause", e => {
+    log("video received `pause' event")
+
+    portToBackground.postMessage({ event: "pause" })
+  })
+
+  video().addEventListener("play", e => {
+    log("video received `play' event")
+
+    portToBackground.postMessage({ event: "play" })
   })
 
   log("Z added a seeked listener")
